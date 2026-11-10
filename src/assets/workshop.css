@@ -1,0 +1,36 @@
+.workshop-page {
+  min-height: 100vh;
+  color: #111;
+  background: #f5f5f2;
+  font-family: 'Roboto', 'Noto Sans Thai', sans-serif;
+}
+
+.workshop-shell {
+  max-width: 1000px;
+}
+
+.workshop-back-link {
+  color: #555;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.workshop-back-link:hover {
+  color: #111;
+}
+
+.next-workshop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 54px;
+  padding-top: 18px;
+  border-top: 1px solid #d8d8d3;
+  color: #777;
+  font-size: 12px;
+}
+
+.next-workshop .v-btn {
+  color: #111;
+  letter-spacing: 0;
+}
