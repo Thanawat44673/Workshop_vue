@@ -72,7 +72,7 @@ export default {
     description: { type: String, required: true },
   },
   created() {
-    if (getAuthToken()) this.$router.replace({ name: 'products' })
+    if (getAuthToken()) this.$router.replace({ name: 'dashboard' })
   },
   methods: {
     async submitAuth(action) {
@@ -87,7 +87,7 @@ export default {
         this.feedbackType = 'success'
         this.feedback = result.message || (action === 'login' ? 'เข้าสู่ระบบสำเร็จ' : 'สมัครสมาชิกสำเร็จ')
         if (action === 'login') {
-          await this.$router.push({ name: 'products' })
+          await this.$router.push({ name: 'dashboard' })
         }
       } catch (error) {
         this.feedbackType = 'error'

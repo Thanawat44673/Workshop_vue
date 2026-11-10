@@ -5,6 +5,8 @@ import WorkshopPage from '../views/WorkshopPage.vue'
 import ProfileWorkshopView from '../views/ProfileWorkshopView.vue'
 import GradeCalculatorView from '../views/GradeCalculatorView.vue'
 import ProductsView from '../views/ProductsView.vue'
+import DashboardView from '../views/DashboardView.vue'
+import OrdersView from '../views/OrdersView.vue'
 import { workshops } from '../data/portfolio'
 import { getAuthToken } from '../services/auth'
 
@@ -26,6 +28,8 @@ const routes = [{
       props: { number: workshop.number, title: workshop.title, description: workshop.description },
     })),
     { path: 'products', name: 'products', component: ProductsView, meta: { requiresAuth: true } },
+    { path: 'dashboard', name: 'dashboard', component: DashboardView, meta: { requiresAuth: true } },
+    { path: 'orders', name: 'orders', component: OrdersView, meta: { requiresAuth: true } },
   ],
 }]
 

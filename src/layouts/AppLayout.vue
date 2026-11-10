@@ -9,7 +9,9 @@
         <v-spacer />
         <nav aria-label="เมนูหลัก">
           <v-btn :to="{ name: 'home' }" text small class="nav-button">หน้าแรก</v-btn>
+          <v-btn v-if="isAuthenticated" :to="{ name: 'dashboard' }" text small class="nav-button">Dashboard</v-btn>
           <v-btn v-if="isAuthenticated" :to="{ name: 'products' }" text small class="nav-button">สินค้าทั้งหมด</v-btn>
+          <v-btn v-if="isAuthenticated" :to="{ name: 'orders' }" text small class="nav-button">ออเดอร์</v-btn>
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
               <v-btn text small class="nav-button" v-bind="attrs" v-on="on">
