@@ -1,24 +1,30 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import WorkshopPage from '../views/WorkshopPage.vue'
+import ProfileWorkshopView from '../views/ProfileWorkshopView.vue'
+import GradeCalculatorView from '../views/GradeCalculatorView.vue'
+import { workshops } from '../data/portfolio'
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
-]
+const routes = [{
+  path: '/',
+  component: () => import('../layouts/AppLayout.vue'),
+  children: [
+    { path: '', name: 'home', component: HomeView },
+    ...workshops.map(workshop => ({
+      path: workshop.path,
+      name: workshop.route,
+      component: workshop.kind === 'profile'
+        ? ProfileWorkshopView
+        : workshop.kind === 'grade'
+          ? GradeCalculatorView
+          : WorkshopPage,
+      props: { number: workshop.number, title: workshop.title, description: workshop.description },
+    })),
+  ],
+}]
 
 const router = new VueRouter({
   mode: 'history',
