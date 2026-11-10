@@ -9,6 +9,7 @@
         <v-spacer />
         <nav aria-label="เมนูหลัก">
           <v-btn :to="{ name: 'home' }" text small class="nav-button">หน้าแรก</v-btn>
+          <v-btn v-if="isAuthenticated" :to="{ name: 'products' }" text small class="nav-button">สินค้าทั้งหมด</v-btn>
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
               <v-btn text small class="nav-button" v-bind="attrs" v-on="on">
@@ -21,6 +22,7 @@
               </v-list-item>
             </v-list>
           </v-menu>
+          <v-btn v-if="isAuthenticated" text small class="nav-button" @click="signOut">ออกจากระบบ</v-btn>
         </nav>
       </v-app-bar>
     </header>
@@ -32,10 +34,26 @@
 
 <script>
 import { workshops } from '../data/portfolio'
+import { clearAuthSession, getAuthToken } from '../services/auth'
 
 export default {
   name: 'AppLayout',
-  data: () => ({ workshops }),
+  data: () => ({ workshops, isAuthenticated: Boolean(getAuthToken()) }),
+  created() {
+    this.handleAuthChange = () => {
+      this.isAuthenticated = Boolean(getAuthToken())
+    }
+    window.addEventListener('auth-changed', this.handleAuthChange)
+  },
+  beforeDestroy() {
+    window.removeEventListener('auth-changed', this.handleAuthChange)
+  },
+  methods: {
+    signOut() {
+      clearAuthSession()
+      this.$router.push({ name: 'workshop-three' })
+    },
+  },
 }
 </script>
 
