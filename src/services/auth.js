@@ -18,13 +18,14 @@ export async function authenticate(action, payload) {
   let result
   try {
     const response = await publicApi.post(endpoint, payload)
-    result = response.data
+    result = response.data || {}
   } catch (error) {
     throw new Error(getApiErrorMessage(error, 'ข้อมูลไม่ถูกต้อง หรือระบบไม่สามารถดำเนินการได้'))
   }
 
   if (action === 'login') {
-    const { token, user } = result.data || {}
+    const responseData = result.data && typeof result.data === 'object' ? result.data : {}
+    const { token, user } = responseData
     if (!token) {
       throw new Error('เข้าสู่ระบบแล้ว แต่ API ไม่ได้ส่ง token กลับมา')
     }
@@ -38,8 +39,15 @@ export async function authenticate(action, payload) {
 }
 
 export function getAuthUser() {
-  const user = sessionStorage.getItem('authUser')
-  return user ? JSON.parse(user) : null
+  const serializedUser = sessionStorage.getItem('authUser')
+  if (!serializedUser) return null
+
+  try {
+    return JSON.parse(serializedUser)
+  } catch {
+    sessionStorage.removeItem('authUser')
+    return null
+  }
 }
 
 export function isAdmin() {

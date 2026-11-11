@@ -15,7 +15,7 @@
         <v-btn text small @click="loadPendingUsers">ลองอีกครั้ง</v-btn>
       </v-alert>
 
-        <v-progress-linear v-if="loading" class="approvals-progress" indeterminate color="black" />
+      <v-progress-linear v-if="loading" class="approvals-progress" indeterminate color="black" />
 
       <v-data-table
         class="approvals-table"
@@ -37,7 +37,7 @@
         </template>
         <template slot="item.actions" slot-scope="{ item }">
           <v-btn
-          color="black"
+            color="black"
             dark
             small
             depressed
@@ -108,7 +108,7 @@ export default {
       this.approvingUserId = id
       try {
         const result = await approveUser(id)
-        this.pendingUsers = this.pendingUsers.filter(item => this.userId(item) !== id)
+        this.pendingUsers = this.pendingUsers.filter(item => String(this.userId(item)) !== String(id))
         this.noticeMessage = result.message || `อนุมัติบัญชี ${this.userName(user)} เรียบร้อยแล้ว`
         this.notice = true
       } catch (error) {

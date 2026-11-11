@@ -75,7 +75,7 @@
               @error="markImageError(product, index)"
             />
             <div v-else class="product-image-placeholder" aria-label="พื้นที่สำหรับรูปสินค้า">
-          <v-icon large color="grey lighten-1">mdi-image-outline</v-icon>
+              <v-icon large color="grey lighten-1">mdi-image-outline</v-icon>
               <span>พื้นที่สำหรับรูปสินค้า</span>
             </div>
             <v-card-text>
@@ -122,17 +122,17 @@
           <p v-if="selectedProduct.stock !== undefined">คงเหลือ: {{ selectedProduct.stock }}</p>
           <v-divider class="my-5" />
           <h3>รายการยอดขาย</h3>
-      <v-progress-linear v-if="ordersLoading" class="my-4" indeterminate color="black" />
+          <v-progress-linear v-if="ordersLoading" class="my-4" indeterminate color="black" />
           <v-alert v-if="ordersError" class="mt-4" type="error" dense text>{{ ordersError }}</v-alert>
           <v-alert v-else-if="!ordersLoading && productOrders.length === 0" class="mt-4" type="info" dense text>ยังไม่มีรายการยอดขายของสินค้านี้</v-alert>
           <v-list v-else class="order-list" dense>
             <v-list-item v-for="(order, index) in productOrders" :key="order._id || order.id || index">
               <v-list-item-content>
-                <v-list-item-title>{{ order.productName || selectedProduct.name || selectedProduct.title || 'สินค้า' }}</v-list-item-title>
-                <v-list-item-subtitle>จำนวน {{ order.quantity }} × {{ formatPrice(order.unitPrice) }}</v-list-item-subtitle>
+                <v-list-item-title>{{ productOrderName(order) }}</v-list-item-title>
+                <v-list-item-subtitle>จำนวน {{ productOrderQuantity(order) }} × {{ productOrderUnitPrices(order) }}</v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-action>
-                <strong>{{ formatPrice(order.totalPrice) }}</strong>
+                <strong>{{ formatPrice(productOrderTotal(order)) }}</strong>
               </v-list-item-action>
             </v-list-item>
           </v-list>
@@ -143,7 +143,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-      <v-snackbar v-model="salesNotice" :timeout="3500" color="grey darken-4">
+    <v-snackbar v-model="salesNotice" :timeout="3500" color="grey darken-4">
       {{ salesMessage }}
     </v-snackbar>
   </article>
@@ -155,6 +155,8 @@ import MerchantNavigation from '../components/MerchantNavigation.vue'
 import SearchField from '../components/SearchField.vue'
 import { extractCollection } from '../utils/collections'
 import { formatPrice } from '../utils/formatters'
+import { getOrderProductNames, getOrderQuantity, getOrderTotal, getOrderUnitPrices, isOrderLike } from '../utils/orders'
+import { priceRules, quantityRules, requiredFieldRules, stockRules } from '../utils/validationRules'
 
 export default {
   name: 'ProductsView',
@@ -175,16 +177,16 @@ export default {
     ordersLoading: false,
     ordersError: '',
     productOrders: [],
-    quantityRules: [value => Number.isInteger(Number(value)) && Number(value) > 0 || 'กรุณากรอกจำนวนเต็มอย่างน้อย 1'],
+    quantityRules,
     productDialog: false,
     savingProduct: false,
     formError: '',
     newProduct: { name: '', description: '', price: '', stock: '', image: '' },
     imagePreview: '',
     searchQuery: '',
-    requiredRules: [value => !!value || 'กรุณากรอกข้อมูล'],
-    priceRules: [value => value !== '' && Number(value) >= 0 || 'กรุณากรอกราคาตั้งแต่ 0 ขึ้นไป'],
-    stockRules: [value => value !== '' && Number.isInteger(Number(value)) && Number(value) >= 0 || 'กรุณากรอกจำนวนเต็มตั้งแต่ 0 ขึ้นไป'],
+    requiredRules: requiredFieldRules,
+    priceRules,
+    stockRules,
   }),
   created() {
     this.loadProducts()
@@ -227,6 +229,19 @@ export default {
     formatPrice(value) {
       return formatPrice(value)
     },
+    productOrderName(order) {
+      const fallback = this.selectedProduct && (this.selectedProduct.name || this.selectedProduct.title) || 'สินค้า'
+      return getOrderProductNames(order, fallback)
+    },
+    productOrderQuantity(order) {
+      return getOrderQuantity(order)
+    },
+    productOrderUnitPrices(order) {
+      return getOrderUnitPrices(order)
+    },
+    productOrderTotal(order) {
+      return getOrderTotal(order)
+    },
     getProductImageUrl(product) {
       return getProductImageUrl(product)
     },
@@ -256,11 +271,13 @@ export default {
         const orders = extractCollection(result, 'orders')
         const data = result && result.data
         const order = data && !Array.isArray(data) ? data : result
-        this.productOrders = orders.length
-          ? orders
-          : order && (order.productName || order.totalPrice !== undefined)
-            ? [order]
-            : []
+        if (orders.length) {
+          this.productOrders = orders
+        } else if (isOrderLike(order)) {
+          this.productOrders = [order]
+        } else {
+          this.productOrders = []
+        }
       } catch (error) {
         this.ordersError = error.message || 'โหลดรายละเอียดสินค้าไม่สำเร็จ'
       } finally {
@@ -334,8 +351,7 @@ h1 { margin: 0; font-size: clamp(38px, 6vw, 64px); font-weight: 800; letter-spac
 .products-intro { margin: 12px 0 0; color: #777; }
 .product-search { max-width: 560px; margin-bottom: 28px; }
 .products-progress { margin-bottom: 24px; }
-.product-card { height: 100%; border-color: #deded9 !important; background: #fff !important; }
-.product-card { cursor: pointer; }
+.product-card { height: 100%; border-color: #deded9 !important; background: #fff !important; cursor: pointer; }
 .product-image-placeholder { display: flex; height: 210px; flex-direction: column; align-items: center; justify-content: center; gap: 8px; background: #eeeee9; color: #888; font-size: 12px; }
 .product-card h2 { margin: 0 0 10px; color: #111; font-size: 18px; }
 .product-description { color: #777; font-size: 13px; line-height: 1.6; }
@@ -352,7 +368,7 @@ h1 { margin: 0; font-size: clamp(38px, 6vw, 64px); font-weight: 800; letter-spac
 .add-product-button { color: #fff !important; background: #111 !important; letter-spacing: 0 !important; }
 .product-form { padding: 0 24px 16px; }
 .number-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.image-preview { margin: -8px 0 16px; background: #f5f5f2; object-fit: cover; width: 100%; height: 100%;}
+.image-preview { margin: -8px 0 16px; background: #f5f5f2; }
 .dialog-actions { padding: 8px 0 0; }
 @media (max-width: 600px) {
   .products-header { align-items: start; flex-wrap: wrap; }

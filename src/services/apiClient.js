@@ -16,8 +16,13 @@ authenticatedApi.interceptors.request.use(config => {
 })
 
 export function getApiErrorMessage(error, fallback) {
-  const responseMessage = error.response && error.response.data && error.response.data.message
-  if (responseMessage) return responseMessage
+  if (!error) return fallback
+
+  const responseData = error.response && error.response.data
+  const responseMessage = typeof responseData === 'string'
+    ? responseData
+    : responseData && (responseData.message || responseData.error)
+  if (typeof responseMessage === 'string' && responseMessage.trim()) return responseMessage
   if (!error.response && error.message) return error.message
   return fallback
 }

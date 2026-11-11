@@ -50,6 +50,7 @@ import MerchantNavigation from '../components/MerchantNavigation.vue'
 import SearchField from '../components/SearchField.vue'
 import { extractCollection } from '../utils/collections'
 import { formatPrice } from '../utils/formatters'
+import { getOrderProductNames, getOrderQuantity, getOrderTotal, getOrderUnitPrices } from '../utils/orders'
 
 export default {
   name: 'OrdersView',
@@ -99,30 +100,16 @@ export default {
       return this.orders.indexOf(order) + 1
     },
     productNames(order) {
-      if (order.productName) return order.productName
-      const items = order.items || order.orderItems || order.products || []
-      const names = items.map(item => item.productName || item.name || (item.product && item.product.name)).filter(Boolean)
-      return names.join(', ') || 'ไม่ระบุสินค้า'
+      return getOrderProductNames(order)
     },
     orderQuantity(order) {
-      if (order.quantity !== undefined) return order.quantity
-      return this.orderItems(order).reduce((total, item) => total + Number(item.quantity || 0), 0)
-    },
-    orderItems(order) {
-      return order.items || order.orderItems || order.products || []
+      return getOrderQuantity(order)
     },
     orderUnitPrices(order) {
-      if (order.unitPrice !== undefined) return this.formatPrice(order.unitPrice)
-      const prices = this.orderItems(order).map(item => {
-        const price = item.unitPrice !== undefined ? item.unitPrice : item.price
-        return price !== undefined ? this.formatPrice(price) : ''
-      }).filter(Boolean)
-      return prices.join(', ') || '—'
+      return getOrderUnitPrices(order)
     },
     orderTotal(order) {
-      if (order.totalPrice !== undefined) return order.totalPrice
-      if (order.total !== undefined) return order.total
-      return order.amount || 0
+      return getOrderTotal(order)
     },
     formatPrice(value) {
       return formatPrice(value)
