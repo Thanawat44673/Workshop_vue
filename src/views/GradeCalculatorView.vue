@@ -132,6 +132,6 @@ export default {
 .grading-scale { margin-top: 78px; }
 .grading-scale ::v-deep h2 { margin-bottom: 18px; font-size: 30px; }
 .scale-item { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-top: 1px solid #d8d8d3; }
-.scale-item strong { font-size: 24px; }
-.scale-item span { color: #777; font-size: 12px; }
+.scale-item strong { font-size: 50px; }
+.scale-item span { color: #777; font-size: 25px; }
 </style>

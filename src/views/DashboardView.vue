@@ -1,17 +1,21 @@
 <template>
   <article class="workshop-page">
+    <merchant-navigation />
     <v-container class="workshop-shell py-12 py-md-16">
       <header class="dashboard-header">
         <div>
           <p class="dashboard-kicker">STORE OVERVIEW</p>
           <h1>ภาพรวมร้านค้า</h1>
-          <p class="dashboard-intro">จัดการสินค้าและติดตามสต็อกในร้าน</p>
+          <p class="dashboard-intro">จัดการสินค้าและติดตามยอดขายของร้าน</p>
         </div>
       </header>
 
       <v-alert v-if="pageError" type="error" outlined dense>
         {{ pageError }}
         <v-btn text small @click="loadProducts">ลองอีกครั้ง</v-btn>
+      </v-alert>
+      <v-alert v-if="salesError" type="warning" outlined dense>
+        โหลดข้อมูลยอดขายไม่สำเร็จ: {{ salesError }}
       </v-alert>
 
       <section class="summary-grid" aria-label="สรุปข้อมูลร้านค้า">
@@ -29,6 +33,11 @@
           <span>มูลค่าสต็อกโดยประมาณ</span>
           <strong>{{ formatPrice(stockValue) }}</strong>
           <small>คำนวณจากราคา × จำนวนคงเหลือ</small>
+        </v-card>
+        <v-card outlined class="summary-card">
+          <span>ยอดขายรวม</span>
+          <strong>{{ formatPrice(totalSales) }}</strong>
+          <small>{{ orders.length }} รายการออเดอร์</small>
         </v-card>
       </section>
 
@@ -89,15 +98,20 @@
 
 <script>
 import { deleteProduct, getProducts, updateProduct } from '../services/products'
+import { getOrders } from '../services/orders'
+import MerchantNavigation from '../components/MerchantNavigation.vue'
 import { extractCollection } from '../utils/collections'
 import { formatPrice } from '../utils/formatters'
 
 export default {
   name: 'DashboardView',
+  components: { MerchantNavigation },
   data: () => ({
     products: [],
+    orders: [],
     loading: false,
     pageError: '',
+    salesError: '',
     headers: [
       { text: 'สินค้า', value: 'name' },
       { text: 'ราคา', value: 'price' },
@@ -125,6 +139,9 @@ export default {
     stockValue() {
       return this.products.reduce((total, product) => total + Number(product.price || 0) * Number(product.stock || 0), 0)
     },
+    totalSales() {
+      return this.orders.reduce((total, order) => total + this.orderTotal(order), 0)
+    },
   },
   created() {
     this.loadProducts()
@@ -133,17 +150,48 @@ export default {
     async loadProducts() {
       this.loading = true
       this.pageError = ''
-      try {
-        const result = await getProducts()
-        this.products = extractCollection(result, 'products')
-      } catch (error) {
-        this.pageError = error.message || 'โหลดข้อมูลร้านค้าไม่สำเร็จ'
-      } finally {
-        this.loading = false
+      this.salesError = ''
+      const [productsResult, ordersResult] = await Promise.all([
+        getProducts().then(data => ({ data })).catch(error => ({ error })),
+        getOrders().then(data => ({ data })).catch(error => ({ error })),
+      ])
+
+      if (productsResult.error) {
+        this.pageError = 'โหลดข้อมูลร้านค้าไม่สำเร็จ'
+      } else {
+        this.products = extractCollection(productsResult.data, 'products')
       }
+
+      if (ordersResult.error) {
+        this.salesError = 'โหลดข้อมูลยอดขายไม่สำเร็จ'
+      } else {
+        this.orders = extractCollection(ordersResult.data, 'orders')
+      }
+      this.loading = false
     },
     formatPrice(value) {
       return formatPrice(value)
+    },
+    orderTotal(order) {
+      const amount = order.totalPrice !== undefined
+        ? order.totalPrice
+        : order.total !== undefined
+          ? order.total
+          : order.amount
+      if (amount !== undefined) return Number(amount) || 0
+
+      const items = order.items || order.orderItems || order.products || []
+      return items.reduce((total, item) => {
+        const itemPrice = item.unitPrice !== undefined
+          ? item.unitPrice
+          : item.price !== undefined
+            ? item.price
+            : item.product && item.product.price
+        const itemTotal = item.totalPrice !== undefined
+          ? Number(item.totalPrice)
+          : Number(itemPrice || 0) * Number(item.quantity || 0)
+        return total + (Number(itemTotal) || 0)
+      }, 0)
     },
     productStatus(product) {
       if (Number(product.stock || 0) <= 0) return { label: 'สินค้าหมด', color: 'red darken-1' }
@@ -197,10 +245,11 @@ export default {
       this.formError = ''
       try {
         const result = await deleteProduct(this.productId(this.selectedProduct))
+        const deletedProductId = String(this.productId(this.selectedProduct))
+        this.products = this.products.filter(product => String(this.productId(product)) !== deletedProductId)
         this.deleteDialog = false
         this.noticeMessage = result.message || 'ลบสินค้าเรียบร้อยแล้ว'
         this.notice = true
-        await this.loadProducts()
       } catch (error) {
         this.formError = error.message || 'ลบสินค้าไม่สำเร็จ'
       } finally {
@@ -216,7 +265,7 @@ export default {
 .dashboard-kicker { margin: 0 0 12px; color: #888; font-size: 10px; font-weight: 700; letter-spacing: .16em; }
 h1 { margin: 0; font-size: clamp(38px, 6vw, 64px); font-weight: 800; letter-spacing: -.05em; }
 .dashboard-intro { margin: 12px 0 0; color: #777; }
-.summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 52px; }
+.summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-bottom: 52px; }
 .summary-card { display: grid; gap: 8px; padding: 24px; border-color: #deded9 !important; }
 .summary-card span { color: #777; font-size: 13px; }
 .summary-card strong { color: #111; font-size: 30px; }
