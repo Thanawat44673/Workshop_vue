@@ -9,9 +9,6 @@
         <v-spacer />
         <nav class="desktop-navigation" aria-label="เมนูหลัก">
           <v-btn :to="{ name: 'home' }" exact text class="nav-button">หน้าแรก</v-btn>
-          <v-btn v-if="isAuthenticated && !isAdmin" :to="{ name: 'dashboard' }" text class="nav-button">ภาพรวมร้านค้า</v-btn>
-          <v-btn v-if="isAuthenticated && !isAdmin" :to="{ name: 'products' }" text class="nav-button">สินค้าทั้งหมด</v-btn>
-          <v-btn v-if="isAuthenticated && !isAdmin" :to="{ name: 'orders' }" text class="nav-button">ออเดอร์</v-btn>
           <v-btn v-if="isAdmin" :to="{ name: 'admin-approvals' }" text class="nav-button">อนุมัติร้านค้า</v-btn>
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
@@ -25,7 +22,7 @@
               </v-list-item>
             </v-list>
           </v-menu>
-          <v-btn v-if="isAuthenticated" text small class="nav-button" @click="signOut">ออกจากระบบ</v-btn>
+          <v-btn v-if="isAuthenticated" text class="nav-button" @click="signOut">ออกจากระบบ</v-btn>
         </nav>
         <div class="mobile-menu-wrapper">
           <v-menu v-model="mobileMenuOpen" offset-y>
@@ -37,15 +34,6 @@
             <v-list dense>
               <v-list-item :to="{ name: 'home' }" exact>
                 <v-list-item-title>หน้าแรก</v-list-item-title>
-              </v-list-item>
-              <v-list-item v-if="isAuthenticated && !isAdmin" :to="{ name: 'dashboard' }">
-                <v-list-item-title>ภาพรวมร้านค้า</v-list-item-title>
-              </v-list-item>
-              <v-list-item v-if="isAuthenticated && !isAdmin" :to="{ name: 'products' }">
-                <v-list-item-title>สินค้าทั้งหมด</v-list-item-title>
-              </v-list-item>
-              <v-list-item v-if="isAuthenticated && !isAdmin" :to="{ name: 'orders' }">
-                <v-list-item-title>ออเดอร์</v-list-item-title>
               </v-list-item>
               <v-list-item v-if="isAdmin" :to="{ name: 'admin-approvals' }">
                 <v-list-item-title>อนุมัติร้านค้า</v-list-item-title>

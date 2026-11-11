@@ -1,5 +1,6 @@
 <template>
   <article class="workshop-page">
+    <merchant-navigation />
     <v-container class="workshop-shell py-12 py-md-16">
       <header class="orders-header">
         <div>
@@ -45,13 +46,14 @@
 
 <script>
 import { getOrders } from '../services/orders'
+import MerchantNavigation from '../components/MerchantNavigation.vue'
 import SearchField from '../components/SearchField.vue'
 import { extractCollection } from '../utils/collections'
 import { formatPrice } from '../utils/formatters'
 
 export default {
   name: 'OrdersView',
-  components: { SearchField },
+  components: { MerchantNavigation, SearchField },
   data: () => ({
     orders: [],
     loading: false,

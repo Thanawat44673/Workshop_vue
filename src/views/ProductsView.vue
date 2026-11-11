@@ -1,5 +1,6 @@
 <template>
   <article class="workshop-page">
+    <merchant-navigation />
     <v-container class="workshop-shell py-12 py-md-16">
       <header class="products-header">
         <div>
@@ -70,6 +71,7 @@
               v-if="getProductImageUrl(product) && !failedImages[productKey(product, index)]"
               :src="getProductImageUrl(product)"
               height="210"
+              contain
               @error="markImageError(product, index)"
             />
             <div v-else class="product-image-placeholder" aria-label="พื้นที่สำหรับรูปสินค้า">
@@ -149,13 +151,14 @@
 
 <script>
 import { createProduct, getProductImageUrl, getProducts, getProductOrders, recordSale } from '../services/products'
+import MerchantNavigation from '../components/MerchantNavigation.vue'
 import SearchField from '../components/SearchField.vue'
 import { extractCollection } from '../utils/collections'
 import { formatPrice } from '../utils/formatters'
 
 export default {
   name: 'ProductsView',
-  components: { SearchField },
+  components: { MerchantNavigation, SearchField },
   data: () => ({
     products: [],
     failedImages: {},
@@ -349,7 +352,7 @@ h1 { margin: 0; font-size: clamp(38px, 6vw, 64px); font-weight: 800; letter-spac
 .add-product-button { color: #fff !important; background: #111 !important; letter-spacing: 0 !important; }
 .product-form { padding: 0 24px 16px; }
 .number-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.image-preview { margin: -8px 0 16px; background: #f5f5f2; }
+.image-preview { margin: -8px 0 16px; background: #f5f5f2; object-fit: cover; width: 100%; height: 100%;}
 .dialog-actions { padding: 8px 0 0; }
 @media (max-width: 600px) {
   .products-header { align-items: start; flex-wrap: wrap; }
