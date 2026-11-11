@@ -42,6 +42,11 @@ export function getAuthUser() {
   return user ? JSON.parse(user) : null
 }
 
+export function isAdmin() {
+  const user = getAuthUser()
+  return Boolean(user && String(user.role || '').toLowerCase() === 'admin')
+}
+
 export function getAuthToken() {
   return sessionStorage.getItem('authToken')
 }

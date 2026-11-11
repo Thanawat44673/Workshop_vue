@@ -10,15 +10,11 @@
         <v-btn class="add-product-button" depressed @click="productDialog = true">เพิ่มสินค้า</v-btn>
       </header>
 
-      <v-text-field
+      <SearchField
         v-model="searchQuery"
-        class="product-search"
+        field-class="product-search"
         label="ค้นหาสินค้า"
         placeholder="พิมพ์ชื่อสินค้า"
-        prepend-inner-icon="mdi-magnify"
-        clearable
-        outlined
-        hide-details
       />
 
       <v-dialog v-model="productDialog" max-width="560">
@@ -77,7 +73,7 @@
               @error="markImageError(product, index)"
             />
             <div v-else class="product-image-placeholder" aria-label="พื้นที่สำหรับรูปสินค้า">
-              <v-icon large color="grey lighten-1">mdi-image-outline</v-icon>
+          <v-icon large color="grey lighten-1">mdi-image-outline</v-icon>
               <span>พื้นที่สำหรับรูปสินค้า</span>
             </div>
             <v-card-text>
@@ -124,7 +120,7 @@
           <p v-if="selectedProduct.stock !== undefined">คงเหลือ: {{ selectedProduct.stock }}</p>
           <v-divider class="my-5" />
           <h3>รายการยอดขาย</h3>
-          <v-progress-linear v-if="ordersLoading" class="my-4" indeterminate color="black" />
+      <v-progress-linear v-if="ordersLoading" class="my-4" indeterminate color="black" />
           <v-alert v-if="ordersError" class="mt-4" type="error" dense text>{{ ordersError }}</v-alert>
           <v-alert v-else-if="!ordersLoading && productOrders.length === 0" class="mt-4" type="info" dense text>ยังไม่มีรายการยอดขายของสินค้านี้</v-alert>
           <v-list v-else class="order-list" dense>
@@ -145,20 +141,22 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar v-model="salesNotice" :timeout="3500" color="grey darken-4">
+      <v-snackbar v-model="salesNotice" :timeout="3500" color="grey darken-4">
       {{ salesMessage }}
     </v-snackbar>
   </article>
 </template>
 
 <script>
-import { getAuthUser } from '../services/auth'
 import { createProduct, getProductImageUrl, getProducts, getProductOrders, recordSale } from '../services/products'
+import SearchField from '../components/SearchField.vue'
+import { extractCollection } from '../utils/collections'
+import { formatPrice } from '../utils/formatters'
 
 export default {
   name: 'ProductsView',
+  components: { SearchField },
   data: () => ({
-    user: null,
     products: [],
     failedImages: {},
     loading: false,
@@ -186,7 +184,6 @@ export default {
     stockRules: [value => value !== '' && Number.isInteger(Number(value)) && Number(value) >= 0 || 'กรุณากรอกจำนวนเต็มตั้งแต่ 0 ขึ้นไป'],
   }),
   created() {
-    this.user = getAuthUser()
     this.loadProducts()
   },
   beforeDestroy() {
@@ -216,15 +213,8 @@ export default {
       this.errorMessage = ''
       try {
         const result = await getProducts()
-        const data = result.data
         this.failedImages = {}
-        this.products = Array.isArray(data)
-          ? data
-          : Array.isArray(data && data.products)
-            ? data.products
-            : Array.isArray(result.products)
-              ? result.products
-              : []
+        this.products = extractCollection(result, 'products')
       } catch (error) {
         this.errorMessage = error.message || 'โหลดรายการสินค้าไม่สำเร็จ'
       } finally {
@@ -232,10 +222,7 @@ export default {
       }
     },
     formatPrice(value) {
-      const amount = Number(value)
-      return Number.isFinite(amount)
-        ? new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(amount)
-        : value
+      return formatPrice(value)
     },
     getProductImageUrl(product) {
       return getProductImageUrl(product)
@@ -263,18 +250,14 @@ export default {
       this.ordersLoading = true
       try {
         const result = await getProductOrders(this.productId(product))
-        const data = result.data
-        this.productOrders = Array.isArray(data)
-          ? data
-          : Array.isArray(data && data.orders)
-            ? data.orders
-            : Array.isArray(result.orders)
-              ? result.orders
-              : data && (data.productName || data.totalPrice !== undefined)
-                ? [data]
-                : result.productName || result.totalPrice !== undefined
-                  ? [result]
-                : []
+        const orders = extractCollection(result, 'orders')
+        const data = result && result.data
+        const order = data && !Array.isArray(data) ? data : result
+        this.productOrders = orders.length
+          ? orders
+          : order && (order.productName || order.totalPrice !== undefined)
+            ? [order]
+            : []
       } catch (error) {
         this.ordersError = error.message || 'โหลดรายละเอียดสินค้าไม่สำเร็จ'
       } finally {

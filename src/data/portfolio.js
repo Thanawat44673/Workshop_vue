@@ -1,12 +1,15 @@
 export const profile = {
   name: 'นาย ธนวัต สนินัด',
   nickname: 'ฟลุ๊ค',
-  introduction: 'ยินดีที่ได้รู้จัก นี่คือพื้นที่เล็ก ๆ ที่รวบรวมเรื่องราว ความสนใจ และสิ่งที่กำลังเรียนรู้ของผม',
+  // introduction: 'ยินดีที่ได้รู้จัก',
   facts: [
     { index: '01 / EDUCATION', label: 'การศึกษา', value: 'มหาวิทยาลัยพะเยา', noteLines: ['คณะเทคโนโลยีสารสนเทศและการสื่อสาร', 'สาขาวิศวกรรมคอมพิวเตอร์'] },
-    { index: '02 / OFF HOURS', label: 'งานอดิเรก', value1: 'สิ่งที่ชอบ', note1: 'ฟังเพลง เล่นเกม ออกกำลังกาย เล่นฟุตบอล ฟังพอดแคสต์', value2: 'สิ่งที่ไม่ชอบ', note2: 'ทำอาหาร ไม่กินเผ็ด ว่ายน้ำ' },
-    { index: '03 / MY EDGE', label: 'จุดแข็ง', value: 'ฟรีดีไซน์', note: 'เช่น ออกแบบ · คิดไอเดีย · ลงมือทำ' },
-    { index: '04 / FAVORITES', label: 'ทีมกีฬาที่ชอบ', value: '', note: 'แมนยู 5 พัล' },
+    { index: '02 / OFF HOURS', label: 'งานอดิเรก', value1: 'สิ่งที่ชอบ', note1: 'ฟังเพลง เล่นเกม ออกกำลังกาย ฟุตบอล ฟังพอดแคสต์ ดูหนัง', value2: 'สิ่งที่ไม่ชอบ', note2: 'ทำอาหาร ว่ายน้ำ การเดินทางระยะไกล' },
+    { index: '03 / MY EDGE', label: 'จุดแข็ง', value: 'อดทน ขยัน เรียนรู้ไว', note: 'ตั้งใจทำสิ่งที่ได้รับมอบหมาย และพร้อมเรียนรู้สิ่งใหม่อยู่เสมอ' },
+    { index: '04 / FAVORITES', label: 'ทีมกีฬาที่ชอบ', note: '', teams: [
+      { name: 'แมนเชสเตอร์ยูไนเต็ด', imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlQ_hKLC8AghohPs58T1y0JVjxc1Ny_l_wZ4NSt7fiZw&s=10' },
+      { name: 'บาเลนเซีย', imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUBg7I6mz4E7b0zCbaHSyqtYDeBxEwSHosrMSbPR-5DQ&s=10' },
+    ] },
   ],
 }
 

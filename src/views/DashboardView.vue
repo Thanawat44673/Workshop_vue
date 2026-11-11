@@ -40,7 +40,7 @@
         <v-data-table :headers="headers" :items="products" :loading="loading" no-data-text="ยังไม่มีสินค้า">
           <template slot="item.price" slot-scope="{ item }">{{ formatPrice(item.price) }}</template>
           <template slot="item.isActive" slot-scope="{ item }">
-            <v-chip small :color="productStatus(item).color" text-color="white">{{ productStatus(item).label }}</v-chip>
+          <v-chip small :color="productStatus(item).color" text-color="white">{{ productStatus(item).label }}</v-chip>
           </template>
           <template slot="item.actions" slot-scope="{ item }">
             <v-btn icon aria-label="แก้ไขสินค้า" @click="startEdit(item)"><v-icon small>mdi-pencil</v-icon></v-btn>
@@ -88,13 +88,13 @@
 </template>
 
 <script>
-import { getAuthUser } from '../services/auth'
 import { deleteProduct, getProducts, updateProduct } from '../services/products'
+import { extractCollection } from '../utils/collections'
+import { formatPrice } from '../utils/formatters'
 
 export default {
   name: 'DashboardView',
   data: () => ({
-    user: null,
     products: [],
     loading: false,
     pageError: '',
@@ -127,7 +127,6 @@ export default {
     },
   },
   created() {
-    this.user = getAuthUser()
     this.loadProducts()
   },
   methods: {
@@ -136,14 +135,7 @@ export default {
       this.pageError = ''
       try {
         const result = await getProducts()
-        const data = result.data
-        this.products = Array.isArray(data)
-          ? data
-          : Array.isArray(data && data.products)
-            ? data.products
-            : Array.isArray(result.products)
-              ? result.products
-              : []
+        this.products = extractCollection(result, 'products')
       } catch (error) {
         this.pageError = error.message || 'โหลดข้อมูลร้านค้าไม่สำเร็จ'
       } finally {
@@ -151,10 +143,7 @@ export default {
       }
     },
     formatPrice(value) {
-      const amount = Number(value)
-      return Number.isFinite(amount)
-        ? new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(amount)
-        : value
+      return formatPrice(value)
     },
     productStatus(product) {
       if (Number(product.stock || 0) <= 0) return { label: 'สินค้าหมด', color: 'red darken-1' }

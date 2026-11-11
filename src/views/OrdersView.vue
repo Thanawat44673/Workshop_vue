@@ -11,14 +11,10 @@
       </header>
 
       <div class="orders-filters">
-        <v-text-field
+        <SearchField
           v-model="searchQuery"
           label="ค้นหาออเดอร์"
           placeholder="ชื่อสินค้า"
-          prepend-inner-icon="mdi-magnify"
-          clearable
-          outlined
-          hide-details
         />
       </div>
 
@@ -49,9 +45,13 @@
 
 <script>
 import { getOrders } from '../services/orders'
+import SearchField from '../components/SearchField.vue'
+import { extractCollection } from '../utils/collections'
+import { formatPrice } from '../utils/formatters'
 
 export default {
   name: 'OrdersView',
+  components: { SearchField },
   data: () => ({
     orders: [],
     loading: false,
@@ -86,14 +86,7 @@ export default {
       this.errorMessage = ''
       try {
         const result = await getOrders()
-        const data = result.data
-        this.orders = Array.isArray(data)
-          ? data
-          : Array.isArray(data && data.orders)
-            ? data.orders
-            : Array.isArray(result.orders)
-              ? result.orders
-              : []
+        this.orders = extractCollection(result, 'orders')
       } catch (error) {
         this.errorMessage = error.message || 'โหลดรายการออเดอร์ไม่สำเร็จ'
       } finally {
@@ -130,10 +123,7 @@ export default {
       return order.amount || 0
     },
     formatPrice(value) {
-      const amount = Number(value)
-      return Number.isFinite(amount)
-        ? new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(amount)
-        : value || '—'
+      return formatPrice(value)
     },
     formatDate(value) {
       if (!value) return '—'

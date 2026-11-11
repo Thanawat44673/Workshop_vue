@@ -116,7 +116,7 @@ export default {
 <style scoped>
 .grade-heading ::v-deep .heading-text { margin-bottom: 0; font-size: clamp(42px, 7vw, 76px); }
 .intro { margin-top: 14px; color: #777; font-size: 16px; }
-.calculator-form { max-width: 640px; }
+.calculator-form { max-width: 640px; margin-left: auto; margin-right: auto; }
 .calculator-card { border-color: #deded9 !important; background: #fff !important; }
 .calculator-card .v-card__text { padding: 28px; }
 .field-label { display: block; margin-bottom: 10px; color: #222; font-size: 14px; font-weight: 700; }

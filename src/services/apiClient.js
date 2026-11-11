@@ -16,9 +16,10 @@ authenticatedApi.interceptors.request.use(config => {
 })
 
 export function getApiErrorMessage(error, fallback) {
-  return (error.response && error.response.data && error.response.data.message)
-    || error.message
-    || fallback
+  const responseMessage = error.response && error.response.data && error.response.data.message
+  if (responseMessage) return responseMessage
+  if (!error.response && error.message) return error.message
+  return fallback
 }
 
 export function resolveApiAssetUrl(path) {

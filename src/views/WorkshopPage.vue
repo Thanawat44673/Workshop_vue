@@ -26,7 +26,16 @@
             <v-tab-item>
               <v-form ref="loginForm" class="auth-form" @submit.prevent="submitAuth('login')">
                 <v-text-field v-model="login.username" label="ชื่อผู้ใช้" autocomplete="username" outlined :rules="requiredRules" />
-                <v-text-field v-model="login.password" label="รหัสผ่าน" type="password" autocomplete="current-password" outlined :rules="requiredRules" />
+                <v-text-field
+                  v-model="login.password"
+                  label="รหัสผ่าน"
+                  :type="showLoginPassword ? 'text' : 'password'"
+                  :append-icon="showLoginPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                  autocomplete="current-password"
+                  outlined
+                  :rules="requiredRules"
+                  @click:append="showLoginPassword = !showLoginPassword"
+                />
                 <v-btn class="auth-submit" type="submit" block large depressed :loading="loading">เข้าสู่ระบบ</v-btn>
               </v-form>
             </v-tab-item>
@@ -34,7 +43,16 @@
             <v-tab-item>
               <v-form ref="registerForm" class="auth-form" @submit.prevent="submitAuth('register')">
                 <v-text-field v-model="registration.username" label="ชื่อผู้ใช้" autocomplete="username" outlined :rules="requiredRules" />
-                <v-text-field v-model="registration.password" label="รหัสผ่าน" type="password" autocomplete="new-password" outlined :rules="requiredRules" />
+                <v-text-field
+                  v-model="registration.password"
+                  label="รหัสผ่าน"
+                  :type="showRegistrationPassword ? 'text' : 'password'"
+                  :append-icon="showRegistrationPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                  autocomplete="new-password"
+                  outlined
+                  :rules="requiredRules"
+                  @click:append="showRegistrationPassword = !showRegistrationPassword"
+                />
                 <v-btn class="auth-submit" type="submit" block large depressed :loading="loading">สมัครสมาชิก</v-btn>
               </v-form>
             </v-tab-item>
@@ -52,7 +70,7 @@
 
 <script>
 import SectionHeading from '../components/SectionHeading.vue'
-import { authenticate, getAuthToken } from '../services/auth'
+import { authenticate, getAuthToken, isAdmin } from '../services/auth'
 
 export default {
   name: 'WorkshopPage',
@@ -60,6 +78,8 @@ export default {
   data: () => ({
     activeTab: 0,
     loading: false,
+    showLoginPassword: false,
+    showRegistrationPassword: false,
     feedback: '',
     feedbackType: 'info',
     login: { username: '', password: '' },
@@ -72,7 +92,7 @@ export default {
     description: { type: String, required: true },
   },
   created() {
-    if (getAuthToken()) this.$router.replace({ name: 'dashboard' })
+    if (getAuthToken()) this.$router.replace({ name: isAdmin() ? 'admin-approvals' : 'dashboard' })
   },
   methods: {
     async submitAuth(action) {
@@ -86,9 +106,7 @@ export default {
         const result = await authenticate(action, payload)
         this.feedbackType = 'success'
         this.feedback = result.message || (action === 'login' ? 'เข้าสู่ระบบสำเร็จ' : 'สมัครสมาชิกสำเร็จ')
-        if (action === 'login') {
-          await this.$router.push({ name: 'dashboard' })
-        }
+        if (action === 'login') await this.$router.push({ name: isAdmin() ? 'admin-approvals' : 'dashboard' })
       } catch (error) {
         this.feedbackType = 'error'
         this.feedback = error.message || 'เชื่อมต่อระบบไม่สำเร็จ กรุณาลองอีกครั้ง'

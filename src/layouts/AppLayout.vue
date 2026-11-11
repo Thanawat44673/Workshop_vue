@@ -7,11 +7,12 @@
           <span class="brand-label">Workshop</span>
         </router-link>
         <v-spacer />
-        <nav aria-label="เมนูหลัก">
-          <v-btn :to="{ name: 'home' }" text small class="nav-button">หน้าแรก</v-btn>
-          <v-btn v-if="isAuthenticated" :to="{ name: 'dashboard' }" text small class="nav-button">Dashboard</v-btn>
-          <v-btn v-if="isAuthenticated" :to="{ name: 'products' }" text small class="nav-button">สินค้าทั้งหมด</v-btn>
-          <v-btn v-if="isAuthenticated" :to="{ name: 'orders' }" text small class="nav-button">ออเดอร์</v-btn>
+        <nav class="desktop-navigation" aria-label="เมนูหลัก">
+          <v-btn :to="{ name: 'home' }" exact text class="nav-button">หน้าแรก</v-btn>
+          <v-btn v-if="isAuthenticated && !isAdmin" :to="{ name: 'dashboard' }" text class="nav-button">ภาพรวมร้านค้า</v-btn>
+          <v-btn v-if="isAuthenticated && !isAdmin" :to="{ name: 'products' }" text class="nav-button">สินค้าทั้งหมด</v-btn>
+          <v-btn v-if="isAuthenticated && !isAdmin" :to="{ name: 'orders' }" text class="nav-button">ออเดอร์</v-btn>
+          <v-btn v-if="isAdmin" :to="{ name: 'admin-approvals' }" text class="nav-button">อนุมัติร้านค้า</v-btn>
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
               <v-btn text small class="nav-button" v-bind="attrs" v-on="on">
@@ -26,6 +27,43 @@
           </v-menu>
           <v-btn v-if="isAuthenticated" text small class="nav-button" @click="signOut">ออกจากระบบ</v-btn>
         </nav>
+        <div class="mobile-menu-wrapper">
+          <v-menu v-model="mobileMenuOpen" offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon aria-label="เปิดเมนูนำทาง" v-bind="attrs" v-on="on">
+                <v-icon>mdi-menu</v-icon>
+              </v-btn>
+            </template>
+            <v-list dense>
+              <v-list-item :to="{ name: 'home' }" exact>
+                <v-list-item-title>หน้าแรก</v-list-item-title>
+              </v-list-item>
+              <v-list-item v-if="isAuthenticated && !isAdmin" :to="{ name: 'dashboard' }">
+                <v-list-item-title>ภาพรวมร้านค้า</v-list-item-title>
+              </v-list-item>
+              <v-list-item v-if="isAuthenticated && !isAdmin" :to="{ name: 'products' }">
+                <v-list-item-title>สินค้าทั้งหมด</v-list-item-title>
+              </v-list-item>
+              <v-list-item v-if="isAuthenticated && !isAdmin" :to="{ name: 'orders' }">
+                <v-list-item-title>ออเดอร์</v-list-item-title>
+              </v-list-item>
+              <v-list-item v-if="isAdmin" :to="{ name: 'admin-approvals' }">
+                <v-list-item-title>อนุมัติร้านค้า</v-list-item-title>
+              </v-list-item>
+              <v-divider />
+              <v-subheader>Workshops</v-subheader>
+              <v-list-item v-for="workshop in workshops" :key="workshop.route" :to="{ name: workshop.route }">
+                <v-list-item-title>Workshop {{ workshop.number }} · {{ workshop.title }}</v-list-item-title>
+              </v-list-item>
+              <template v-if="isAuthenticated">
+                <v-divider />
+                <v-list-item @click="signOut">
+                  <v-list-item-title>ออกจากระบบ</v-list-item-title>
+                </v-list-item>
+              </template>
+            </v-list>
+          </v-menu>
+        </div>
       </v-app-bar>
     </header>
     <v-main>
@@ -36,14 +74,20 @@
 
 <script>
 import { workshops } from '../data/portfolio'
-import { clearAuthSession, getAuthToken } from '../services/auth'
+import { clearAuthSession, getAuthToken, isAdmin } from '../services/auth'
 
 export default {
   name: 'AppLayout',
-  data: () => ({ workshops, isAuthenticated: Boolean(getAuthToken()) }),
+  data: () => ({ workshops, isAuthenticated: Boolean(getAuthToken()), isAdmin: isAdmin(), mobileMenuOpen: false }),
+  watch: {
+    '$vuetify.breakpoint.mdAndUp'(isDesktop) {
+      if (isDesktop) this.mobileMenuOpen = false
+    },
+  },
   created() {
     this.handleAuthChange = () => {
       this.isAuthenticated = Boolean(getAuthToken())
+      this.isAdmin = isAdmin()
     }
     window.addEventListener('auth-changed', this.handleAuthChange)
   },
@@ -52,6 +96,7 @@ export default {
   },
   methods: {
     signOut() {
+      this.mobileMenuOpen = false
       clearAuthSession()
       this.$router.push({ name: 'workshop-three' })
     },
@@ -62,9 +107,14 @@ export default {
 <style scoped>
 .site-bar { border-bottom: 1px solid #e9e9e6 !important; }
 .brand-link { display: inline-flex; align-items: center; color: #111; text-decoration: none; }
-.brand-mark { margin-right: 10px; font-size: 25px; font-weight: 900; letter-spacing: -.1em; }
+.brand-mark { margin-right: 10px; font-size: 35px; font-weight: 900; letter-spacing: -.1em; }
 .brand-mark span { color: #888; }
-.brand-label { font-size: 9px; font-weight: 700; letter-spacing: .16em; }
+.brand-label { font-size: 15px; font-weight: 500; letter-spacing: .16em; }
 .nav-button { margin-left: 8px; color: #333 !important; letter-spacing: .02em; }
 .menu-caret { margin-left: 7px; font-size: 15px; }
+.mobile-menu-wrapper { display: none; }
+@media (max-width: 959px) {
+  .desktop-navigation { display: none; }
+  .mobile-menu-wrapper { display: block; }
+}
 </style>

@@ -6,12 +6,12 @@
         <section-heading class="profile-heading mt-12" level="h1" eyebrow="WORKSHOP 01 / ABOUT ME">
           สวัสดีครับ<br>ผมชื่อ {{ profile.name }}
         </section-heading>
-        <p class="intro">ชื่อเล่น <strong>{{ profile.nickname }}</strong> — {{ profile.introduction }}</p>
+        <p class="intro">ชื่อเล่น <strong>{{ profile.nickname }}</strong>{{ profile.introduction }}</p>
       </header>
 
       <section class="facts-section mt-10" aria-label="ข้อมูลแนะนำตัว">
         <section-heading eyebrow="A LITTLE ABOUT ME">
-          ตัวตนของผม <span>ในไม่กี่บรรทัด</span>
+          รู้จักตัวตนของผม<span>ในไม่กี่บรรทัด</span>
         </section-heading>
         <v-row>
           <v-col v-for="fact in profile.facts" :key="fact.label" cols="12" sm="6" md="3">
@@ -43,6 +43,6 @@ export default {
 <style scoped>
 .profile-heading ::v-deep .heading-text { margin-bottom: 0; font-size: clamp(42px, 7vw, 76px); }
 .profile-heading ::v-deep .heading-text span { color: inherit; text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 8px; }
-.intro { max-width: 490px; margin: 14px 0 0; color: #777; font-size: 16px; line-height: 1.9; }
+.intro { max-width: 490px; margin: 14px 0 0; color: #777; font-size: 20px; line-height: 1.9; }
 .intro strong { color: #111; }
 </style>
