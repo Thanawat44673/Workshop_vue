@@ -36,17 +36,17 @@ export default {
 </script>
 
 <style scoped>
-.home-page { min-height: 100vh; color: #111; background: #f5f5f2; font-family: 'Roboto', 'Noto Sans Thai', sans-serif; }
+.home-page { min-height: 100vh; color: var(--text); background: var(--background); font-family: 'Inter', 'Noto Sans Thai', sans-serif; }
 .home-shell { max-width: 1180px; }
-.eyebrow { margin: 0 0 36px; color: #777; font-size: 11px; font-weight: 700; letter-spacing: .18em; padding: 0px 0px 48px 0px;}
-.eyebrow span { color: #111; }
+.eyebrow { margin: 0 0 36px; color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .18em; padding: 0px 0px 48px 0px;}
+.eyebrow span { color: var(--primary); }
 .home-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 56px; }
 .home-heading h1 { margin: 0; font-size: clamp(48px, 8vw, 88px); font-weight: 800; letter-spacing: -.06em; line-height: 1.08; }
-.home-heading h1 span { color: #858585; }
-.home-heading p { max-width: 300px; margin: 0 0 8px; color: #777; font-size: 15px; line-height: 1.8; }
+.home-heading h1 span { color: var(--primary); }
+.home-heading p { max-width: 300px; margin: 0 0 8px; color: var(--muted); font-size: 15px; line-height: 1.8; }
 .workshop-grid { margin-bottom: 70px; }
-.home-footer { display: flex; justify-content: space-between; padding: 20px 0; border-top: 1px solid #d8d8d3; color: #888; font-size: 10px; letter-spacing: .08em; }
-.home-footer b { color: #111; }
+.home-footer { display: flex; justify-content: space-between; padding: 20px 0; border-top: 1px solid var(--border); color: var(--muted); font-size: 10px; letter-spacing: .08em; }
+.home-footer b { color: var(--primary); }
 @media (max-width: 700px) {
   .home-heading { display: block; margin-bottom: 34px; }
   .home-heading p { margin-top: 18px; }

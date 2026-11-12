@@ -50,18 +50,18 @@ export default {
 </script>
 
 <style scoped>
-.fact-card { height: 100%; border-color: #deded9 !important; background: transparent !important; }
+.fact-card { height: 100%; border-color: var(--border) !important; background: transparent !important; }
 .fact-card .v-card { height: 100%; }
 .fact-card .v-card__text { padding: 22px 20px 24px; }
-.fact-index { margin-bottom: 30px; color: #888; font-size: 11px; font-weight: 700; letter-spacing: .13em; }
+.fact-index { margin-bottom: 30px; color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .13em; }
 h3 { margin-bottom: 12px; font-size: 22px; font-weight: 700; }
 .fact-value-group { margin-bottom: 12px; }
-.fact-value { margin: 0 0 5px; color: #333; font-size: 17px; font-weight: 600; }
-.fact-note { margin: 0; color: #858585; font-size: 14px; line-height: 1.7; }
+.fact-value { margin: 0 0 5px; color: var(--text); font-size: 17px; font-weight: 600; }
+.fact-note { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
 .fact-note-line { display: block; }
 .fact-team-list { display: grid; gap: 10px; }
 .fact-media-row { display: flex; min-width: 0; align-items: center; gap: 12px; }
-.fact-team-name { margin: 0; color: #333; font-size: 16px; font-weight: 600; overflow-wrap: anywhere; }
-.fact-image-slot { display: grid; flex: 0 0 48px; width: 48px; height: 48px; place-items: center; overflow: hidden; border: 1px dashed #c9c9c3; border-radius: 6px; background: #f5f5f2; color: #888; font-size: 9px; text-align: center; }
+.fact-team-name { margin: 0; color: var(--text); font-size: 16px; font-weight: 600; overflow-wrap: anywhere; }
+.fact-image-slot { display: grid; flex: 0 0 48px; width: 48px; height: 48px; place-items: center; overflow: hidden; border: 1px dashed var(--border); border-radius: 6px; background: var(--background); color: var(--muted); font-size: 9px; text-align: center; }
 .fact-image-slot img { width: 100%; height: 100%; object-fit: contain; }
 </style>

@@ -120,14 +120,14 @@ export default {
 
 <style scoped>
 .page-heading ::v-deep .heading-text { margin-bottom: 0; font-size: clamp(42px, 7vw, 76px); }
-.intro { margin-top: 14px; color: #777; font-size: 16px; }
+.intro { margin-top: 14px; color: var(--muted); font-size: 16px; }
 .auth-section { display: grid; grid-template-columns: 1fr minmax(320px, 440px); gap: 64px; align-items: start; }
-.auth-kicker { margin: 0 0 14px; color: #888; font-size: 10px; font-weight: 700; letter-spacing: .16em; }
+.auth-kicker { margin: 0 0 14px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .16em; }
 .auth-intro h2 { margin: 0 0 12px; font-size: clamp(24px, 3vw, 34px); font-weight: 800; }
-.auth-intro > p:last-child { max-width: 360px; color: #777; line-height: 1.8; }
-.auth-card { border-color: #deded9 !important; background: #fff !important; }
+.auth-intro > p:last-child { max-width: 360px; color: var(--muted); line-height: 1.8; }
+.auth-card { border-color: var(--border) !important; background: var(--surface) !important; }
 .auth-form { display: grid; gap: 4px; padding: 28px 24px 22px; }
-.auth-submit { color: #fff !important; background: #111 !important; letter-spacing: 0 !important; }
+.auth-submit { color: var(--on-primary) !important; background: var(--primary) !important; letter-spacing: 0 !important; }
 .auth-feedback { margin: 0 24px 20px; }
 @media (max-width: 760px) {
   .auth-section { grid-template-columns: 1fr; gap: 28px; }

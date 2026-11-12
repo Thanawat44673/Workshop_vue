@@ -1,5 +1,5 @@
 <template>
-  <article class="workshop-page">
+  <article class="workshop-page grade-calculator-page">
     <v-container class="workshop-shell py-12 py-md-16">
       <header>
         <router-link class="workshop-back-link" :to="{ name: 'home' }">← กลับหน้า Workshop</router-link>
@@ -9,9 +9,10 @@
         <p class="intro">{{ description }}</p>
       </header>
 
-      <form class="calculator-form mt-10" aria-label="แบบฟอร์มคำนวณเกรด" @submit.prevent="calculateGrade">
-        <v-card class="calculator-card" outlined>
-          <v-card-text>
+      <div class="grade-workspace">
+        <form class="calculator-form" aria-label="แบบฟอร์มคำนวณเกรด" @submit.prevent="calculateGrade">
+          <v-card class="calculator-card" outlined>
+            <v-card-text>
             <label class="field-label" for="score-input">คะแนนที่ได้</label>
             <v-text-field
               id="score-input"
@@ -42,21 +43,21 @@
               </div>
               <strong class="grade-letter">{{ grade }}</strong>
             </v-card>
-          </v-card-text>
-        </v-card>
-      </form>
+            </v-card-text>
+          </v-card>
+        </form>
 
-      <section class="grading-scale" aria-label="เกณฑ์การให้คะแนน">
-        <section-heading eyebrow="GRADING SCALE">เกณฑ์การให้คะแนน</section-heading>
-        <v-row>
-          <v-col v-for="item in gradeRanges" :key="item.grade" cols="6" sm="4" md="2">
-            <div class="scale-item">
+        <section class="grading-scale" aria-label="เกณฑ์การให้คะแนน">
+          <section-heading eyebrow="GRADING SCALE">เกณฑ์การให้คะแนน</section-heading>
+          <div class="scale-list">
+            <div v-for="item in gradeRanges" :key="item.grade" class="scale-item" :class="`grade-${item.grade.toLowerCase()}`">
               <strong>{{ item.grade }}</strong>
               <span>{{ item.range }}</span>
+              <span class="scale-meter" aria-hidden="true"><span class="scale-meter-fill"></span></span>
             </div>
-          </v-col>
-        </v-row>
-      </section>
+          </div>
+        </section>
+      </div>
 
       <nav class="next-workshop" aria-label="ไปยัง Workshop ถัดไป">
         <span></span>
@@ -114,24 +115,48 @@ export default {
 </script>
 
 <style scoped>
+/* Page layout and component details; palette values come from workshop.css. */
+article.grade-calculator-page { color: var(--text); background: var(--background); }
+article.grade-calculator-page .workshop-shell { width: 100%; max-width: 1000px; margin-right: auto; margin-left: auto; }
 .grade-heading ::v-deep .heading-text { margin-bottom: 0; font-size: clamp(42px, 7vw, 76px); }
-.intro { margin-top: 14px; color: #777; font-size: 16px; }
-.calculator-form { max-width: 640px; margin-left: auto; margin-right: auto; }
-.calculator-card { border-color: #deded9 !important; background: #fff !important; }
-.calculator-card .v-card__text { padding: 28px; }
-.field-label { display: block; margin-bottom: 10px; color: #222; font-size: 14px; font-weight: 700; }
-.score-field { max-width: 360px; }
-.calculate-button { color: #fff !important; background: #111 !important; letter-spacing: 0 !important; }
+.intro { max-width: 620px; margin-top: 14px; color: var(--muted); font-size: 16px; line-height: 1.8; }
+.grade-workspace { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr); gap: 24px; align-items: stretch; margin-top: 38px; }
+.calculator-form { min-width: 0; margin: 0; }
+.calculator-card { position: relative; height: 100%; overflow: hidden; border: 1px solid var(--border) !important; border-radius: 18px !important; background: linear-gradient(145deg, var(--surface) 0%, var(--background) 100%) !important; box-shadow: 0 14px 38px rgba(var(--text-rgb), .06) !important; }
+.calculator-card::before { position: absolute; top: -88px; right: -72px; width: 220px; height: 220px; border: 1px solid rgba(var(--primary-rgb), .14); border-radius: 50%; background: radial-gradient(circle, rgba(var(--secondary-rgb), .19), rgba(var(--secondary-rgb), 0) 70%); content: ''; pointer-events: none; }
+.calculator-card .v-card__text { position: relative; z-index: 1; padding: clamp(24px, 4vw, 36px); }
+.field-label { display: block; margin-bottom: 10px; color: var(--text); font-size: 14px; font-weight: 700; }
+.score-field { max-width: none; }
+.calculate-button { min-width: 190px; color: var(--on-primary) !important; background: var(--primary) !important; letter-spacing: 0 !important; box-shadow: 0 8px 18px rgba(var(--primary-rgb), .2) !important; }
+.calculate-button:hover { background: var(--accent) !important; }
 .button-arrow { margin-left: 14px; font-size: 18px; }
-.feedback-alert { max-width: 360px; }
-.result-card { display: flex; max-width: 360px; align-items: center; justify-content: space-between; padding: 20px 22px; border: 1px solid #111; background: #f5f5f2; }
+.feedback-alert, .result-card { max-width: none; }
+.result-card { display: flex; align-items: center; justify-content: space-between; padding: 20px 22px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface-soft); }
 .result-label, .result-caption { margin: 0; }
-.result-label { color: #555; font-size: 13px; }
-.result-caption { margin-top: 4px; color: #888; font-size: 11px; }
-.grade-letter { font-size: 56px; font-weight: 900; line-height: 1; }
-.grading-scale { margin-top: 78px; }
-.grading-scale ::v-deep h2 { margin-bottom: 18px; font-size: 30px; }
-.scale-item { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-top: 1px solid #d8d8d3; }
-.scale-item strong { font-size: 50px; }
-.scale-item span { color: #777; font-size: 25px; }
+.result-label { color: var(--text); font-size: 14px; font-weight: 600; }
+.result-caption { margin-top: 4px; color: var(--muted); font-size: 12px; }
+.grade-letter { display: grid; width: 68px; height: 68px; place-items: center; border-radius: 20px; background: var(--primary); color: var(--on-primary); font-size: 42px; font-weight: 900; line-height: 1; box-shadow: 0 8px 22px rgba(var(--primary-rgb), .2); }
+.grading-scale { margin: 0; padding: clamp(22px, 3vw, 30px); border: 1px solid var(--border); border-radius: 18px; background: var(--surface); box-shadow: 0 14px 38px rgba(var(--text-rgb), .045); }
+.grading-scale ::v-deep h2 { margin-bottom: 18px; font-size: 26px; }
+.scale-list { display: grid; gap: 10px; }
+.scale-item { display: grid; grid-template-columns: 46px 1fr; align-items: center; column-gap: 12px; row-gap: 8px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; background: linear-gradient(100deg, var(--surface-soft), var(--surface)); }
+.scale-item strong { grid-row: span 2; color: var(--primary); font-size: 32px; line-height: 1; }
+.scale-item > span:not(.scale-meter) { color: var(--muted); font-size: 14px; font-weight: 600; }
+.scale-meter { display: block; height: 5px; overflow: hidden; border-radius: 999px; background: rgba(var(--primary-rgb), .12); }
+.scale-meter-fill { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--primary), var(--accent)); }
+.grade-a .scale-meter-fill { width: 100%; }
+.grade-b .scale-meter-fill { width: 80%; }
+.grade-c .scale-meter-fill { width: 60%; }
+.grade-d .scale-meter-fill { width: 40%; }
+.grade-f .scale-meter-fill { width: 20%; }
+@media (max-width: 900px) {
+  .grade-workspace { grid-template-columns: 1fr; }
+  .grading-scale { margin-top: 2px; }
+  .scale-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .grade-workspace { margin-top: 28px; gap: 18px; }
+  .scale-list { grid-template-columns: 1fr; }
+  .calculate-button { width: 100%; }
+}
 </style>

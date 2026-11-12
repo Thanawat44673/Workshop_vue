@@ -93,12 +93,13 @@ export default {
 </script>
 
 <style scoped>
-.site-bar { border-bottom: 1px solid #e9e9e6 !important; }
-.brand-link { display: inline-flex; align-items: center; color: #111; text-decoration: none; }
+.site-bar { border-bottom: 1px solid var(--border) !important; background: var(--secondary) !important; }
+.brand-link { display: inline-flex; align-items: center; color: var(--text); text-decoration: none; }
 .brand-mark { margin-right: 10px; font-size: 35px; font-weight: 900; letter-spacing: -.1em; }
-.brand-mark span { color: #888; }
+.brand-mark span { color: var(--primary); }
 .brand-label { font-size: 15px; font-weight: 500; letter-spacing: .16em; }
-.nav-button { margin-left: 8px; color: #333 !important; letter-spacing: .02em; }
+.nav-button { margin-left: 8px; color: var(--text) !important; letter-spacing: .02em; }
+.nav-button:hover { color: var(--primary) !important; }
 .menu-caret { margin-left: 7px; font-size: 15px; }
 .mobile-menu-wrapper { display: none; }
 @media (max-width: 959px) {

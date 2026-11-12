@@ -43,6 +43,6 @@ export default {
 <style scoped>
 .profile-heading ::v-deep .heading-text { margin-bottom: 0; font-size: clamp(42px, 7vw, 76px); }
 .profile-heading ::v-deep .heading-text span { color: inherit; text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 8px; }
-.intro { max-width: 490px; margin: 14px 0 0; color: #777; font-size: 20px; line-height: 1.9; }
-.intro strong { color: #111; }
+.intro { max-width: 490px; margin: 14px 0 0; color: var(--muted); font-size: 20px; line-height: 1.9; }
+.intro strong { color: var(--text); }
 </style>

@@ -246,20 +246,20 @@ export default {
 
 <style scoped>
 .dashboard-header { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 40px; }
-.dashboard-kicker { margin: 0 0 12px; color: #888; font-size: 10px; font-weight: 700; letter-spacing: .16em; }
+.dashboard-kicker { margin: 0 0 12px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .16em; }
 h1 { margin: 0; font-size: clamp(38px, 6vw, 64px); font-weight: 800; letter-spacing: -.05em; }
-.dashboard-intro { margin: 12px 0 0; color: #777; }
+.dashboard-intro { margin: 12px 0 0; color: var(--muted); }
 .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-bottom: 52px; }
-.summary-card { display: grid; gap: 8px; padding: 24px; border-color: #deded9 !important; }
-.summary-card span { color: #777; font-size: 13px; }
-.summary-card strong { color: #111; font-size: 30px; }
-.summary-card small { color: #999; font-size: 11px; }
+.summary-card { display: grid; gap: 8px; padding: 24px; border-color: var(--border) !important; }
+.summary-card span { color: var(--muted); font-size: 13px; }
+.summary-card strong { color: var(--text); font-size: 30px; }
+.summary-card small { color: var(--muted); font-size: 11px; }
 .inventory-heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 .inventory-heading h2 { margin: 0; font-size: 24px; }
 .edit-form { padding: 0 24px 16px; }
 .number-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .dialog-actions { padding-top: 8px; }
-.primary-action { color: #fff !important; background: #111 !important; letter-spacing: 0 !important; }
+.primary-action { color: var(--on-primary) !important; background: var(--primary) !important; letter-spacing: 0 !important; }
 @media (max-width: 700px) {
   .summary-grid { grid-template-columns: 1fr; }
   .dashboard-header { align-items: start; flex-direction: column; }

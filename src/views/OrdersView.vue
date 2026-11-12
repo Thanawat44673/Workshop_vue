@@ -125,11 +125,11 @@ export default {
 
 <style scoped>
 .orders-header { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 32px; }
-.orders-kicker { margin: 0 0 12px; color: #888; font-size: 10px; font-weight: 700; letter-spacing: .16em; }
+.orders-kicker { margin: 0 0 12px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .16em; }
 h1 { margin: 0; font-size: clamp(38px, 6vw, 64px); font-weight: 800; letter-spacing: -.05em; }
-.orders-intro { margin: 12px 0 0; color: #777; }
+.orders-intro { margin: 12px 0 0; color: var(--muted); }
 .orders-filters { max-width: 480px; margin-bottom: 24px; }
-.orders-table { border: 1px solid #deded9; }
+.orders-table { border: 1px solid var(--border); }
 @media (max-width: 700px) {
   .orders-header { align-items: start; flex-direction: column; }
 }

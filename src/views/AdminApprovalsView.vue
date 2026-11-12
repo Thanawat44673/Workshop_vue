@@ -123,11 +123,11 @@ export default {
 
 <style scoped>
 .approvals-header { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 32px; }
-.approvals-kicker { margin: 0 0 12px; color: #888; font-size: 10px; font-weight: 700; letter-spacing: .16em; }
+.approvals-kicker { margin: 0 0 12px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .16em; }
 h1 { margin: 0; font-size: clamp(38px, 6vw, 64px); font-weight: 800; letter-spacing: -.05em; }
-.approvals-intro { margin: 12px 0 0; color: #777; }
+.approvals-intro { margin: 12px 0 0; color: var(--muted); }
 .approvals-progress { margin-bottom: 20px; }
-.approvals-table { border: 1px solid #deded9; background: #fff; }
+.approvals-table { border: 1px solid var(--border); background: var(--surface); }
 @media (max-width: 700px) {
   .approvals-header { align-items: start; flex-direction: column; }
 }
