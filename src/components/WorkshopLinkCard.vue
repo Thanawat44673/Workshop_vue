@@ -31,7 +31,7 @@ export default {
 .workshop-card .v-card__text { min-height: 175px; padding: 22px 22px 16px; }
 .workshop-topline { display: flex; justify-content: space-between; margin-bottom: 26px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .13em; }
 .card-arrow { color: var(--accent); font-size: 18px; }
-h3 { margin-bottom: 8px; color: var(--text); font-size: 22px; font-weight: 700; }
+h3 { margin-bottom: 8px; color: var(--text); font-size: 22px; font-weight: 700; white-space: pre-line; }
 .workshop-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
 .workshop-card .v-card__actions { padding: 14px 22px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; }
 .action-arrow { color: var(--accent); font-size: 18px; }

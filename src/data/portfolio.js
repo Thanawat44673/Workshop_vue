@@ -34,7 +34,7 @@ export const workshops = [
     number: '03',
     route: 'workshop-three',
     path: 'workshop/3',
-    title: 'Workshop E-commerce',
-    description: 'เข้าสู่ระบบหรือสมัครสมาชิกผ่าน API ของร้านค้าออนไลน์',
+    title: 'I Computer Store',
+    description: 'เข้าสู่ระบบเพื่อใช้งานต่อหรือสมัครสมาชิกเพื่อสร้างบัญชีใหม่',
   },
 ]

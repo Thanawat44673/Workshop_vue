@@ -1,80 +1,92 @@
 <template>
-  <article class="workshop-page">
-    <v-container class="workshop-shell py-12 py-md-16">
-      <header>
-        <router-link class="workshop-back-link" :to="{ name: 'home' }">← กลับหน้า Workshop</router-link>
-        <section-heading class="page-heading mt-12" level="h1" :eyebrow="`PERSONAL PORTFOLIO / WORKSHOP ${number}`">
-          {{ title }}
-        </section-heading>
-        <p class="intro">{{ description }}</p>
-      </header>
+  <article class="workshop-page auth-page">
+    <section class="auth-layout" aria-label="เข้าสู่ระบบหรือสมัครสมาชิก">
+      <div class="auth-panel">
+        <div class="auth-content">
+          <h1>{{ activeTab === 0 ? 'ยินดีต้อนรับกลับ' : 'สร้างบัญชีผู้ใช้' }}</h1>
+          <p class="auth-subtitle">
+            {{ activeTab === 0 ? 'เข้าสู่ระบบเพื่อดำเนินการต่อ' : 'สมัครสมาชิกเพื่อเริ่มต้นใช้งาน' }}
+          </p>
 
-      <section class="auth-section mt-10" aria-label="เข้าสู่ระบบหรือสมัครสมาชิก">
-        <div class="auth-intro">
-          <p class="auth-kicker">YOUR E-COMMERCE ACCOUNT</p>
-          <h2>เริ่มต้นใช้งานร้านค้าออนไลน์</h2>
-          <p>เข้าสู่ระบบเพื่อใช้งานต่อ หรือสมัครสมาชิกเพื่อสร้างบัญชีใหม่</p>
-        </div>
+          <v-form v-if="activeTab === 0" ref="loginForm" class="auth-form" @submit.prevent="submitAuth('login')">
+            <v-text-field
+              v-model="login.username"
+              label="ชื่อผู้ใช้งาน"
+              autocomplete="username"
+              outlined
+              :rules="requiredRules"
+              hide-details="auto"
+            />
+            <v-text-field
+              v-model="login.password"
+              label="รหัสผ่าน"
+              :type="showLoginPassword ? 'text' : 'password'"
+              :append-icon="showLoginPassword ? 'mdi-eye-off' : 'mdi-eye'"
+              autocomplete="current-password"
+              outlined
+              :rules="requiredRules"
+              hide-details="auto"
+              @click:append="showLoginPassword = !showLoginPassword"
+            />
+            <v-btn class="auth-submit" type="submit" block large depressed :loading="loading">
+              เข้าสู่ระบบ
+            </v-btn>
+          </v-form>
 
-        <v-card class="auth-card" outlined>
-          <v-tabs v-model="activeTab" grow>
-            <v-tab>เข้าสู่ระบบ</v-tab>
-            <v-tab>สมัครสมาชิก</v-tab>
-          </v-tabs>
-
-          <v-tabs-items v-model="activeTab">
-            <v-tab-item>
-              <v-form ref="loginForm" class="auth-form" @submit.prevent="submitAuth('login')">
-                <v-text-field v-model="login.username" label="ชื่อผู้ใช้" autocomplete="username" outlined :rules="requiredRules" />
-                <v-text-field
-                  v-model="login.password"
-                  label="รหัสผ่าน"
-                  :type="showLoginPassword ? 'text' : 'password'"
-                  :append-icon="showLoginPassword ? 'mdi-eye-off' : 'mdi-eye'"
-                  autocomplete="current-password"
-                  outlined
-                  :rules="requiredRules"
-                  @click:append="showLoginPassword = !showLoginPassword"
-                />
-                <v-btn class="auth-submit" type="submit" block large depressed :loading="loading">เข้าสู่ระบบ</v-btn>
-              </v-form>
-            </v-tab-item>
-
-            <v-tab-item>
-              <v-form ref="registerForm" class="auth-form" @submit.prevent="submitAuth('register')">
-                <v-text-field v-model="registration.username" label="ชื่อผู้ใช้" autocomplete="username" outlined :rules="requiredRules" />
-                <v-text-field
-                  v-model="registration.password"
-                  label="รหัสผ่าน"
-                  :type="showRegistrationPassword ? 'text' : 'password'"
-                  :append-icon="showRegistrationPassword ? 'mdi-eye-off' : 'mdi-eye'"
-                  autocomplete="new-password"
-                  outlined
-                  :rules="requiredRules"
-                  @click:append="showRegistrationPassword = !showRegistrationPassword"
-                />
-                <v-btn class="auth-submit" type="submit" block large depressed :loading="loading">สมัครสมาชิก</v-btn>
-              </v-form>
-            </v-tab-item>
-          </v-tabs-items>
+          <v-form v-else ref="registerForm" class="auth-form" @submit.prevent="submitAuth('register')">
+            <v-text-field
+              v-model="registration.username"
+              label="ชื่อผู้ใช้งาน"
+              autocomplete="username"
+              outlined
+              :rules="requiredRules"
+              hide-details="auto"
+            />
+            <v-text-field
+              v-model="registration.password"
+              label="รหัสผ่าน"
+              :type="showRegistrationPassword ? 'text' : 'password'"
+              :append-icon="showRegistrationPassword ? 'mdi-eye-off' : 'mdi-eye'"
+              autocomplete="new-password"
+              outlined
+              :rules="requiredRules"
+              hide-details="auto"
+              @click:append="showRegistrationPassword = !showRegistrationPassword"
+            />
+            <v-btn class="auth-submit" type="submit" block large depressed :loading="loading">
+              สร้างบัญชี
+            </v-btn>
+          </v-form>
 
           <v-alert v-if="feedback" class="auth-feedback" :type="feedbackType" dense text role="status" aria-live="polite">
             {{ feedback }}
           </v-alert>
-        </v-card>
-      </section>
 
-    </v-container>
+          <p class="auth-switch">
+            {{ activeTab === 0 ? 'ยังไม่มีบัญชีใช่ไหม' : 'มีบัญชีอยู่แล้วใช่ไหม' }}
+            <a href="#" @click.prevent="toggleAuthMode">{{ activeTab === 0 ? 'สมัครสมาชิก' : 'เข้าสู่ระบบ' }}</a>
+          </p>
+        </div>
+      </div>
+
+      <aside class="auth-brand-panel" aria-label="ข้อมูล Workshop">
+        <div class="brand-copy">
+          <p class="brand-eyebrow">MY WORKSHOP</p>
+          <div class="brand-number" aria-hidden="true">{{ number }}</div>
+          <h2>{{ title }}</h2>
+          <p class="brand-description">{{ description }}</p>
+          <span class="brand-caption">ร้านค้าออนไลน์ของคุณเริ่มต้นที่นี่</span>
+        </div>
+      </aside>
+    </section>
   </article>
 </template>
 
 <script>
-import SectionHeading from '../components/SectionHeading.vue'
 import { authenticate, getAuthToken, isAdmin } from '../services/auth'
 
 export default {
   name: 'WorkshopPage',
-  components: { SectionHeading },
   data: () => ({
     activeTab: 0,
     loading: false,
@@ -95,6 +107,10 @@ export default {
     if (getAuthToken()) this.$router.replace({ name: isAdmin() ? 'admin-approvals' : 'dashboard' })
   },
   methods: {
+    toggleAuthMode() {
+      this.activeTab = this.activeTab === 0 ? 1 : 0
+      this.feedback = ''
+    },
     async submitAuth(action) {
       const form = action === 'login' ? this.$refs.loginForm : this.$refs.registerForm
       if (!form.validate()) return
@@ -119,17 +135,37 @@ export default {
 </script>
 
 <style scoped>
-.page-heading ::v-deep .heading-text { margin-bottom: 0; font-size: clamp(42px, 7vw, 76px); }
-.intro { margin-top: 14px; color: var(--muted); font-size: 16px; }
-.auth-section { display: grid; grid-template-columns: 1fr minmax(320px, 440px); gap: 64px; align-items: start; }
-.auth-kicker { margin: 0 0 14px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .16em; }
-.auth-intro h2 { margin: 0 0 12px; font-size: clamp(24px, 3vw, 34px); font-weight: 800; }
-.auth-intro > p:last-child { max-width: 360px; color: var(--muted); line-height: 1.8; }
-.auth-card { border-color: var(--border) !important; background: var(--surface) !important; }
-.auth-form { display: grid; gap: 4px; padding: 28px 24px 22px; }
-.auth-submit { color: var(--on-primary) !important; background: var(--primary) !important; letter-spacing: 0 !important; }
-.auth-feedback { margin: 0 24px 20px; }
+.auth-page { min-height: calc(100vh - 64px); background: var(--surface); font-family: 'Noto Sans Thai', 'Inter', sans-serif; }
+.auth-layout { display: grid; min-height: calc(100vh - 64px); grid-template-areas: 'brand form'; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.auth-panel { display: flex; grid-area: form; align-items: center; justify-content: center; padding: 64px clamp(28px, 8vw, 112px); background: var(--surface); }
+.auth-content { width: 100%; max-width: 410px; }
+.auth-kicker { margin: 0 0 18px; color: var(--muted); font-size: 14px; font-weight: 700; letter-spacing: normal; }
+.auth-content h1 { margin: 0 0 8px; color: var(--text); font-size: clamp(30px, 3.2vw, 40px); font-weight: 700; letter-spacing: normal; line-height: 1.3; }
+.auth-subtitle { margin: 0 0 30px; color: var(--muted); font-size: 16px; line-height: 1.7; }
+.auth-form { display: grid; gap: 8px; }
+.auth-form ::v-deep .v-input { margin-bottom: 2px; }
+.auth-form ::v-deep .v-input__slot { background: #FAF3E1 !important; }
+.auth-form ::v-deep input { font-size: 16px; letter-spacing: normal; }
+.auth-form ::v-deep .v-label { color: var(--text); font-size: 16px; font-weight: 500; letter-spacing: normal; }
+.auth-submit { min-height: 50px; margin-top: 8px; color: var(--on-primary) !important; background: var(--primary) !important; font-size: 16px; font-weight: 700; letter-spacing: 0 !important; text-transform: none; }
+.auth-feedback { margin-top: 20px; }
+.auth-switch { margin: 28px 0 0; color: var(--text); font-size: 15px; line-height: 1.7; }
+.auth-switch a { margin-left: 4px; color: var(--primary); font-weight: 700; text-decoration: none; }
+.auth-switch a:hover { text-decoration: underline; }
+.auth-brand-panel { display: flex; grid-area: brand; align-items: center; justify-content: center; min-height: 100%; padding: 72px 48px; background: var(--secondary); text-align: center; }
+.brand-copy { max-width: 460px; }
+.brand-eyebrow { margin-bottom: 36px; }
+.brand-number { color: var(--primary); font-size: clamp(100px, 20vw, 220px); font-weight: 900; letter-spacing: -.1em; line-height: .82; }
+.brand-copy h2 { margin: 32px 0 10px; color: var(--text); font-size: clamp(28px, 4vw, 46px); font-weight: 800; letter-spacing: -.05em; line-height: 1.12; white-space: pre-line; }
+.brand-description { max-width: 360px; margin: 0 auto; color: var(--muted); font-size: 15px; line-height: 1.7; }
+.brand-caption { display: inline-block; margin-top: 42px; padding-top: 14px; border-top: 1px solid var(--border); color: var(--muted); font-size: 15px; font-weight: 700; letter-spacing: normal; }
 @media (max-width: 760px) {
-  .auth-section { grid-template-columns: 1fr; gap: 28px; }
+  .auth-page, .auth-layout { min-height: auto; }
+  .auth-layout { grid-template-areas: 'form' 'brand'; grid-template-columns: 1fr; }
+  .auth-panel { min-height: calc(100vh - 64px); padding: 48px 28px; }
+  .auth-brand-panel { min-height: 340px; padding: 48px 28px; }
+  .brand-number { font-size: 112px; }
+  .brand-copy h2 { margin-top: 22px; }
+  .brand-eyebrow { margin-bottom: 28px; }
 }
 </style>

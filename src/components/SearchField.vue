@@ -1,5 +1,6 @@
 <template>
   <v-text-field
+    class="SearchField"
     :value="value"
     :class="fieldClass"
     :label="label"
@@ -23,3 +24,7 @@ export default {
   },
 }
 </script>
+
+<style>
+.SearchField { background: white; }
+</style>
