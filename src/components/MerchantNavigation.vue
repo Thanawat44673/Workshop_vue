@@ -34,7 +34,7 @@ export default {
 .merchant-navigation-band { width: 100%;}
 .merchant-navigation-shell { display: flex; max-width: 1000px; justify-content: center; padding-top: 12px; padding-bottom: 12px; }
 .merchant-navigation-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
-.merchant-navigation-links .v-btn { min-width: 180px; height: 44px; border: 2.5px solid orange; border-radius: 999px !important; color: var(--text) !important; letter-spacing: 0; }
+.merchant-navigation-links .v-btn { min-width: 180px; height: 44px; border: 2.5px solid orange; border-radius: 999px !important; color: var(--text) !important; letter-spacing: 0; background: white;}
 .merchant-navigation-links .merchant-nav-active,
 .merchant-navigation-links .v-btn:hover {color: var(--primary) !important; }
 @media (max-width: 600px) {

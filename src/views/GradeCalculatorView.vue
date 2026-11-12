@@ -123,7 +123,6 @@ article.grade-calculator-page .workshop-shell { width: 100%; max-width: 1000px; 
 .grade-workspace { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr); gap: 24px; align-items: stretch; margin-top: 38px; }
 .calculator-form { min-width: 0; margin: 0; }
 .calculator-card { position: relative; height: 100%; overflow: hidden; border: 1px solid var(--border) !important; border-radius: 18px !important; background: linear-gradient(145deg, var(--surface) 0%, var(--background) 100%) !important; box-shadow: 0 14px 38px rgba(var(--text-rgb), .06) !important; }
-.calculator-card::before { position: absolute; top: -88px; right: -72px; width: 220px; height: 220px; border: 1px solid rgba(var(--primary-rgb), .14); border-radius: 50%; background: radial-gradient(circle, rgba(var(--secondary-rgb), .19), rgba(var(--secondary-rgb), 0) 70%); content: ''; pointer-events: none; }
 .calculator-card .v-card__text { position: relative; z-index: 1; padding: clamp(24px, 4vw, 36px); }
 .field-label { display: block; margin-bottom: 10px; color: var(--text); font-size: 14px; font-weight: 700; }
 .score-field { max-width: none; }

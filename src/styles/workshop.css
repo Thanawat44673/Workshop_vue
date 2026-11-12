@@ -1,9 +1,9 @@
 /* Shared design tokens */
 :root {
   --text: #222222;
-  --background: #FAF3E1;
+  --background: #f8f3e7;
   --primary: #FF6D1F;
-  --secondary: #F5E7C6;
+  --secondary: #f3e8cf;
   --accent: #FF6D1F;
   --muted: rgba(34, 34, 34, .68);
   --border: rgba(34, 34, 34, .14);
