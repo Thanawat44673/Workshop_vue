@@ -31,10 +31,10 @@ export default {
 </script>
 
 <style scoped>
-.merchant-navigation-band { width: 100%; background: #111; }
+.merchant-navigation-band { width: 100%;}
 .merchant-navigation-shell { display: flex; max-width: 1000px; justify-content: center; padding-top: 12px; padding-bottom: 12px; }
 .merchant-navigation-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
-.merchant-navigation-links .v-btn { min-width: 180px; height: 44px; border: 1px solid #fff; border-radius: 999px !important; color: #fff !important; letter-spacing: 0; }
+.merchant-navigation-links .v-btn { min-width: 180px; height: 44px; border: 2.5px solid #000000; border-radius: 999px !important; color: #000000 !important; letter-spacing: 0; }
 .merchant-navigation-links .merchant-nav-active,
 .merchant-navigation-links .v-btn:hover { background: #fff !important; color: #111 !important; }
 @media (max-width: 600px) {
