@@ -31,7 +31,7 @@ export async function authenticate(action, payload) {
     }
 
     sessionStorage.setItem('authToken', token)
-    sessionStorage.setItem('authUser', JSON.stringify(user || {}))
+    sessionStorage.setItem('authUser', JSON.stringify({ role: user && user.role }))
     notifyAuthChange()
   }
 
